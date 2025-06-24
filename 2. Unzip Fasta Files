@@ -1,0 +1,21 @@
+# Next the raw zipped fasta files that were transerfer onto the HPRC server underwent an
+# unzipping process using the following code.
+
+
+########################################
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4   # number of processor cores (i.e. tasks)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --mem=4G   # memory per CPU core
+#SBATCH -J "unzip_loop" # job name
+#SBATCH --output "unzip_loop"
+
+for file in *.fastq.gz; do
+    zcat "$file" > "/scratch/user/carlylo/Cass_Microbiome/Unzipped_Data/$(basename "$file" .gz)"
+done
+
+# Prior to running this unzipping loop, a subdirectory named "Unzipped_Data" was created 
+# in the Cass_Microbiome directory using the mkdir command. 
+
