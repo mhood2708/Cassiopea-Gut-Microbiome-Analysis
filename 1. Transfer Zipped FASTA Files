@@ -1,1 +1,8 @@
 # Use the scp command to transfer raw zipped 
+
+# The original raw zipped fasta samples were sequences out of house and send via
+# email. These files were then downloaded onto the main computer and then transfered
+# onto the HPRC grace shell via the scp command (securely copied)
+
+# This process required duel authentification through the Duo Mobile app
+
