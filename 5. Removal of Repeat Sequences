@@ -1,6 +1,7 @@
 # The Unique.seqs command within mothur identified repeat/identical sequences 
 # and placed only unique sequences into a new Fasta file
 
+# This pipeline was run using the unique.seqs command within the mothur module
 
 ##############################################
 
