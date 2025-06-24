@@ -1,10 +1,10 @@
-# The fast1.info Tool was used to analyize and assess the quality of the (HTS) microbiome samples.
+# The fastq.info Tool was used to analyize and assess the quality of the (HTS) microbiome samples.
 
 # This was all conducted within the mothur module. Additioanlly, since all of this was 
 # run outside of the space of the mothur module, prior to each command, the "set.dir" or "set directory"
 # command was required in order to tell the script where to diposit the output results. 
 
-# 
+# This pipeline was run using the fastq.info command within mothur
 
 #############################
 
