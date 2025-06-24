@@ -2,7 +2,7 @@
 # min and max sequence lengths, ambiguous base pair precentages, etc to help provide
 # filtering parameters in future steps.
 
-# # This pipeline was run using the summary.seqs command within the mothur module
+# This pipeline was run using the summary.seqs command within the mothur module
 
 ##########################################################
 
