@@ -1,0 +1,45 @@
+# In this pipeline, we return to the mothur module to align out samples to a
+# microbiome reference database called silva.seed
+
+# This pipeline was conducting using the command align.seqs
+
+###########################################
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4   # number of processor cores (i.e. tasks)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --mem=4G   # memory per CPU core
+#SBATCH -J "mothur_align_loop" # job name
+#SBATCH --output "mothur_align_loop"
+
+#Upload modules
+module load GCC/12.3.0
+module load mothur/1.48.2
+
+# Define the directory containing FASTA files
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Chimera_Output"
+
+# Define the output directory for mothur screening results
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Align_Output"
+
+# Define the path to the reference genome
+Ref_Genome="/scratch/user/carlylo/Cass_Microbiome/RefGenome/silva.bacteria/silva.seed_v138_2/silva.seed_v138_2.align"
+
+# Find all .fastq.gz files in the input directory and loop through them
+find "$input_dir" -type f -name "*.nochimeras.fasta" | while IFS= read -r fasta_file; do
+    # Sample Name Identification
+    sample_name=$(basename "$fasta_file" .R1.good.unique.nochimeras.fasta)
+
+    # Debug
+    echo "Processing sample: $sample_name"
+
+    # Mothur code for fasta files
+    mothur "#set.dir(output=$output_dir); align.seqs(candidate=$fasta_file, template=$Ref_Genome)"
+   
+    # Debug
+    echo "Finished processing: $sample_name"
+done
+
+# Debug
+echo "All samples processed!"
