@@ -4,7 +4,7 @@
 # run outside of the space of the mothur module, prior to each command, the "set.dir" or "set directory"
 # command was required in order to tell the script where to diposit the output results. 
 
-# This pipeline was run using the fastq.info command within mothur
+# This pipeline was run using the fastq.info command within the mothur module
 
 #############################
 
