@@ -1,0 +1,44 @@
+# The Unique.seqs command within mothur identified repeat/identical sequences 
+# and placed only unique sequences into a new Fasta file
+
+
+##############################################
+
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4   # number of processor cores (i.e. tasks)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --mem=4G   # memory per CPU core
+#SBATCH -J "mothur_unique_loop" # job name
+#SBATCH --output "mothur_unique_loop"
+
+#Upload modules
+module load GCC/12.3.0
+module load mothur/1.48.2
+
+# Define the directory containing Screened FASTA files
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Screen_Output"
+
+# Define the output directory for mothur Unique results
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Unique_Output"
+
+# Find all .fasta files in the input directory and loop through them
+find "$input_dir" -type f -name "*.fasta" | while IFS= read -r fasta_file; do
+
+    # Sample Name Identification
+    sample_name=$(basename "$fasta_file" .fasta)
+
+    # Debug
+    echo "Processing sample: $sample_name"
+
+    # Mothur code for fasta files
+    mothur "#set.dir(output=$output_dir); unique.seqs(fasta=$fasta_file)"
+
+    # Debug
+    echo "Finished processing: $sample_name"
+done
+
+# Debug
+echo "All samples processed!"
+
