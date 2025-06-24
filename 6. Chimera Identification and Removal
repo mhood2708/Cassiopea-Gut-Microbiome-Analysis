@@ -1,6 +1,6 @@
 # This is the first and only pipeline that was created outside of the mothur module. 
 
-# Here we used a module called Vsearch
+# Here we used a module called Vsearch and a command called vsearch as well with a variety of flags.
 
 ############################
 
