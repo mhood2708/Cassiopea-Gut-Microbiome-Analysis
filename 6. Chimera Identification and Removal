@@ -1,0 +1,51 @@
+# This is the first and only pipeline that was created outside of the mothur module. 
+
+# Here we used a module called Vsearch
+
+############################
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4        # number of processor cores
+#SBATCH --nodes=1         # number of nodes
+#SBATCH --mem=4G          # memory per CPU core
+#SBATCH -J "vsearch_ref_loop" # job name
+#SBATCH --output "vsearch_ref_loop"
+
+# Load necessary modules
+module load GCC/12.3.0
+module load VSEARCH/2.25.0
+
+# Input: unaligned unique FASTA files (from unique.seqs)
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Unique_Output"
+
+# Output directory for vsearch chimera filtering
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Chimera_Output"
+
+# Path to your reference database
+reference_db="/scratch/user/carlylo/Cass_Microbiome/RefGenome/silva.bacteria/silva.gold.ng.fasta"
+
+# Loop over all .fasta files in input_dir
+find "$input_dir" -type f -name "*.fasta" | while IFS= read -r fasta_file; do
+
+    # Sample name
+    sample_name=$(basename "$fasta_file" .fasta)
+
+    # Output file paths
+    chimera_output="$output_dir/${sample_name}.chimeras.fasta"
+    non_chimera_output="$output_dir/${sample_name}.nochimeras.fasta"
+
+    # Log
+    echo "Running vsearch --uchime_ref on $sample_name"
+
+    # Run VSEARCH chimera check using reference database
+    vsearch --uchime_ref "$fasta_file" \
+            --db "$reference_db" \
+            --chimeras "$chimera_output" \
+            --nonchimeras "$non_chimera_output" \
+            --fasta_width 0
+
+    echo "Completed: $sample_name"
+done
+
+echo "All samples processed with vsearch --uchime_ref."
