@@ -1,7 +1,7 @@
 # In this pipeline, we return to the mothur module to align out samples to a
 # microbiome reference database called silva.seed
 
-# # This pipeline was run using the align.seqs command within the mothur module
+# This pipeline was run using the align.seqs command within the mothur module
 
 ###########################################
 
