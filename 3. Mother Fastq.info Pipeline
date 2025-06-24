@@ -1,0 +1,48 @@
+# The fast1.info Tool was used to analyize and assess the quality of the (HTS) microbiome samples.
+
+# This was all conducted within the mothur module. Additioanlly, since all of this was 
+# run outside of the space of the mothur module, prior to each command, the "set.dir" or "set directory"
+# command was required in order to tell the script where to diposit the output results. 
+
+# 
+
+#############################
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4   # number of processor cores (i.e. tasks)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --mem=4G   # memory per CPU core
+#SBATCH -J "mothur_fastq_loop" # job name
+#SBATCH --output "mothur_fastq_loop"
+
+#Upload modules
+module load GCC/12.3.0
+module load mothur/1.48.2
+
+# Define the directory containing unzipped FASTQ files
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Unzipped_Data"
+
+# Define the output directory for FastQC results
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Fastq_Output"
+
+# Find all unzipped .fastq.gz (now fastq) files in the input directory and loop through them
+find "$input_dir" -type f -name "*.fastq" | while IFS= read -r fastq_file; do
+
+    # Sample Name Identification
+    sample_name=$(basename "$fastq_file" .fastq)
+
+    # Debug
+    echo "Processing sample: $sample_name"
+
+    # Mothur code for fastq files
+    mothur "#set.dir(output=$output_dir); fastq.info(fastq=$fastq_file)"
+    
+    # Debug
+    echo "Finished processing: $sample_name"
+done
+
+# Debug
+echo "All samples processed!"
+
+
