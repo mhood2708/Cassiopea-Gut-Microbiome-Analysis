@@ -1,0 +1,39 @@
+# Using the summary.seq command within mother, we can determine a variety of parameters incuding 
+# min and max sequence lengths, ambiguous base pair precentages, etc to help provide
+# filtering parameters in future steps.
+
+
+#############################################
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4        # number of processor cores (i.e. tasks)
+#SBATCH --nodes=1         # number of nodes
+#SBATCH --mem=4G          # total memory
+#SBATCH -J "mothur_fastq_summary_loop" # job name
+#SBATCH --output="mothur_fastq_summary_loop"  # include job ID in output
+
+# Load modules
+module load GCC/12.3.0
+module load mothur/1.48.2
+
+# Define input/output
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Fastq_Output"
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Summary.Seqs_Output/Post_Fastq.Info_Summaries"
+
+# Find all .fasta files in the input directory and loop through them
+find "$input_dir" -type f -name "*.fasta" | while IFS= read -r fasta_file; do
+
+    # Get sample name without extension
+    sample_name=$(basename "$fasta_file" .fasta)
+
+    # Debug message
+    echo "Processing sample: $sample_name"
+
+    # Run mothur with output directory and screen.seqs
+    mothur "#set.dir(output=$output_dir); summary.seqs(fasta=$fasta_file)"
+
+    echo "Finished processing: $sample_name"
+done
+
+echo "All samples processed!"
