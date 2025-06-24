@@ -2,6 +2,9 @@
 # no ambiguous base pairs, a minimum length of 1350 base pairs long, and a maximum lenght of 
 # 1600 base pairs long.
 
+# # This pipeline was run using the screen.seqs command within the mothur module
+
+#######################################
 
 #!/bin/bash
 #SBATCH --time=24:00:00   # walltime
