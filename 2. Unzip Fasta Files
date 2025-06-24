@@ -1,6 +1,7 @@
 # Next the raw zipped fasta files that were transerfer onto the HPRC server underwent an
 # unzipping process using the following code.
 
+# This pipeline was run using the zcat command
 
 ########################################
 
