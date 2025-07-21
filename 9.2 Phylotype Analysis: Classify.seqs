@@ -1,0 +1,42 @@
+# 9.2 Phylotype Analysis: Classify.seqs
+
+# The classify.seqs command allows the user to use several different methods to 
+# assign their sequences to the taxonomy outline of their choice. Current methods 
+# include the Wang approach, using a k-nearest neighbor consensus and zap.
+
+# This pipeline was run using the classify.seqs command within the mothur module
+
+
+#!/bin/bash
+#SBATCH --time=24:00:00
+#SBATCH --ntasks=4
+#SBATCH --nodes=1
+#SBATCH --mem=8G
+#SBATCH -J "mothur_classify_taxonomy_loop"
+#SBATCH --output="mothur_classify_taxonomy_loop"
+
+module load GCC/12.3.0
+module load mothur/1.48.2
+                                                                                                                                   # Define the output directory for mothur screening results
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Unique_Output/Final"
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Classification_Output"
+ref_fasta="/scratch/user/carlylo/Cass_Microbiome/RefGenome/silva.bacteria/silva.seed_v138_2/silva.seed_v138_2.align"
+ref_taxonomy="/scratch/user/carlylo/Cass_Microbiome/RefGenome/silva.bacteria/silva.seed_v138_2/silva.seed_v138_2.tax"
+
+# Find all .fastq.gz files in the input directory and loop through them
+find "$input_dir" -type f -name "*.fasta" | while IFS= read -r fasta_file; do
+
+    # Sample Name Identification
+    sample_name=$(basename "$fasta_file" .R1.good.unique.nochimeras.good.filter.unique.fasta)
+
+    # Debug
+    echo "Processing sample: $sample_name"
+
+    # Classify Sequences
+    mothur "#set.dir(output=$output_dir); classify.seqs(fasta=$fasta_file, reference=$ref_fasta, taxonomy=$ref_taxonomy, method=knn, cutoff=80)"
+    # Debug
+    echo "Finished processing: $sample_name"
+done
+
+echo "All samples processed!" 
+
