@@ -1,0 +1,42 @@
+# # 9.1.1 Phylogenetic Tree Synthesis: cluster.
+
+
+# Once a distance matrix gets read into mothur, the cluster command can be used to 
+# assign sequences to OTUs.
+
+# This pipeline was run using the cluster command within the mothur module
+
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4   # number of processor cores (i.e. tasks)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --mem=4G   # memory per CPU core
+#SBATCH -J "mothur_cluster_loop" # job name
+#SBATCH --output "mothur_cluster_loop"
+
+#Upload modules
+module load GCC/12.3.0
+module load mothur/1.48.2
+
+# Define the directory containing FASTA files
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Distance_Output"
+
+# Define the output directory for mothur screening results
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Cluster_Output"
+
+# Find all .fastq.gz files in the input directory and loop through them
+find "$input_dir" -type f -name "*.dist" | while IFS= read -r dist_file; do
+
+    # Sample Name Identification
+    sample_name=$(basename "$dist_file" .dist)
+
+    # Debug
+    echo "Processing sample: $sample_name"
+
+    # Mothur code for fasta files
+    mothur "#set.dir(output=$output_dir); cluster(phylip=$dist_file)"
+
+    # Debug
+    echo "Finished processing: $sample_name"
+done
