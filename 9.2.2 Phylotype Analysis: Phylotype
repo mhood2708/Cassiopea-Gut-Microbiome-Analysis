@@ -1,0 +1,29 @@
+# 9.2.2 Phylotype Analysis: Phylotype
+
+# The phylotype command can be used to assign sequences to OTUs based on their 
+# taxonomy and outputs a .list, .rabund and .sabund files.
+
+# This pipeline was run using the Phylotype command within the mothur module
+
+
+######## NOT FINISHED ##################
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4   # number of processor cores (i.e. tasks)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --mem=4G   # memory per CPU core
+#SBATCH -J "mothur_phylo_loop" # job name
+#SBATCH --output "mothur_phylo_loop"
+
+#Upload modules
+module load GCC/12.3.0
+module load mothur/1.48.2
+
+# Define the directory containing .dist files
+input_dir="/scratch/user/mhood/Cass_Microbiome/Mothur_Classification_Output/TP3C8.R1.good.unique.nochimeras.good.filter.unique.see$
+# Define the output directory for merged results
+output_dir="/scratch/user/mhood/Cass_Microbiome/Merged_Files/Merged_Tre_Output"
+
+# Mothur code for fasta files
+mothur "#set.dir(output=$output_dir); merge.files(input=${input_dir}/
