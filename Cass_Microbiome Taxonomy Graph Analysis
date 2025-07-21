@@ -1,0 +1,1767 @@
+# Cass_Microbiome Taxonomy Graph Analysis
+
+
+########################## REVISED Group Histogram CODE ###########################
+
+# Load Packages
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+
+
+
+
+# 1. Read the mothur summary.tax output
+taxonomy_summary <- read.table("C:/Users/mhood/Desktop/Cass_Microbiome/merge.tax.summary",
+                               header = TRUE,
+                               sep = "\t",
+                               stringsAsFactors = FALSE)
+
+
+
+
+
+
+# 2. Sample Group Definitions
+
+TP1_Dark_Samples <- c("TP1C2", "TP1C4", "TP1C6", "TP1C8", "TP1C10", "TP1C14", "TP1D", "TP1L")
+
+TP1_Light_Samples <- c("TP1C1", "TP1C3", "TP1C5", "TP1C7", "TP1C9", "TP1C11", "TP1C13", "TP1D", "TP1L")
+
+TP2_Dark_Samples <- c("TP2C2", "TP2C4", "TP2C6", "TP2C8", "TP2C10", "TP2C12", "TP2C14", "TP2D", "TP2L")
+
+TP2_Light_Samples <- c("TP2C1", "TP2C3", "TP2C7", "TP2C9", "TP2C11", "TP2C13", "TP2D", "TP2L")
+
+TP3_Dark_Samples <- c("TP3C2", "TP3C4", "TP3C6", "TP3C8", "TP3C10", "TP3C12", "TP3C14", "TP3D", "TP3L")
+
+TP3_Light_Samples <- c("TP3C1", "TP3C3", "TP3C5", "TP3C7", "TP3C9", "TP3C11", "TP1C13", "TP3D", "TP3L")
+
+
+
+
+
+# 3. Create the plots
+
+
+############################################### TP1 ###################################################
+
+
+
+################### TP1 Dark #############################################
+
+
+
+
+
+### Phylum ###
+
+TP1_Dark_Data_Phylum<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 2) %>% # Only PHYLUM level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Dark_Data_Phylum, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Dark (Phylum Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Dark_Taxonomic_Composition(Phylum).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+### Class ###
+
+TP1_Dark_Data_Class<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 3) %>% # Only CLASS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Dark_Data_Class, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Dark (Class Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Dark_Taxonomic_Composition(Class).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+### Order ###
+
+TP1_Dark_Data_Order<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 4) %>% # Only ORDER level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Dark_Data_Order, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Dark (Order Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Dark_Taxonomic_Composition(Order).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+### Family ###
+
+TP1_Dark_Data_Family<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 5) %>% # Only FAMILY level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Dark_Data_Family, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Dark (Family Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Dark_Taxonomic_Composition(Family).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+
+### Genus ###
+
+TP1_Dark_Data_Genus<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 6) %>% # Only GENUS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  mutate(taxon = str_replace_all(taxon, "\xa0", " ")) %>% # Replace non-breaking spaces
+  mutate(taxon_italic = ifelse(taxlevel == 6, paste0("italic('", taxon, "')"), taxon)) %>%
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Dark_Data_Genus, aes(x = Sample, y = Relative_Abundance, fill = taxon_italic)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Dark (Genus Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon") + # Capitalized legend title
+  scale_fill_discrete(labels = parse(text = levels(factor(TP1_Dark_Data_Genus$taxon_italic)))) +
+  guides(fill = guide_legend(label.theme = element_text(face = "italic")))
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Dark_Taxonomic_Composition(Genus).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+
+################### TP1 Light #################################
+
+
+
+### Phylum ###
+
+TP1_Light_Data_Phylum<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 2) %>% # Only PHYLUM level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Light_Data_Phylum, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Light (Phylum Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Light_Taxonomic_Composition(Phylum).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+
+
+
+### Class ###
+
+TP1_Light_Data_Class<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 3) %>% # Only CLASS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Light_Data_Class, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Light (Class Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Light_Taxonomic_Composition(Class).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+
+
+### Order ###
+
+TP1_Light_Data_Order<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 4) %>% # Only ORDER level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Light_Data_Order, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Light (Order Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Light_Taxonomic_Composition(Order).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+
+### Family ###
+
+TP1_Light_Data_Family<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 5) %>% # Only FAMILY level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Light_Data_Family, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Light (Family Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Light_Taxonomic_Composition(Family).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+### Genus ###
+
+TP1_Light_Data_Genus<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 6) %>% # Only GENUS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  mutate(taxon = str_replace_all(taxon, "\xa0", " ")) %>% # Replace non-breaking spaces
+  mutate(taxon_italic = ifelse(taxlevel == 6, paste0("italic('", taxon, "')"), taxon)) %>%
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP1_Light_Data_Genus, aes(x = Sample, y = Relative_Abundance, fill = taxon_italic)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Light (Genus Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon") + # Capitalized legend title
+  scale_fill_discrete(labels = parse(text = levels(factor(TP1_Light_Data_Genus$taxon_italic)))) +
+  guides(fill = guide_legend(label.theme = element_text(face = "italic")))
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Light_Taxonomic_Composition(Genus).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+
+############################################### TP2 ##########################################################
+
+
+
+
+################### TP2 Dark ###############################
+
+
+
+
+### Phylum ###
+
+TP2_Dark_Data_Phylum<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 2) %>% # Only PHYLUM level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Dark_Data_Phylum, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Dark (Phylum Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Dark_Taxonomic_Composition(Phylum).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+
+
+### Class ###
+
+TP2_Dark_Data_Class<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 3) %>% # Only CLASS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Dark_Data_Class, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Dark (Class Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Dark_Taxonomic_Composition(Class).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+
+
+### Order ###
+
+TP2_Dark_Data_Order<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 4) %>% # Only ORDER level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Dark_Data_Order, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Dark (Order Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Dark_Taxonomic_Composition(Order).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+### Family ###
+
+TP2_Dark_Data_Family<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 5) %>% # Only FAMILY level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Dark_Data_Family, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Dark (Family Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Dark_Taxonomic_Composition(Family).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+### Genus ###
+
+TP2_Dark_Data_Genus<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 6) %>% # Only GENUS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  mutate(taxon = str_replace_all(taxon, "\xa0", " ")) %>% # Replace non-breaking spaces
+  mutate(taxon_italic = ifelse(taxlevel == 6, paste0("italic('", taxon, "')"), taxon)) %>%
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Dark_Data_Genus, aes(x = Sample, y = Relative_Abundance, fill = taxon_italic)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Dark (Genus Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon") + # Capitalized legend title
+  scale_fill_discrete(labels = parse(text = levels(factor(TP2_Dark_Data_Genus$taxon_italic)))) +
+  guides(fill = guide_legend(label.theme = element_text(face = "italic")))
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Dark_Taxonomic_Composition(Genus).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+################### TP2 Light #################################
+
+
+
+### Phylum ###
+
+TP2_Light_Data_Phylum<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 2) %>% # Only PHYLUM level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Light_Data_Phylum, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Light (Phylum Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Light_Taxonomic_Composition(Phylum).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+
+
+### Class ###
+
+TP2_Light_Data_Class<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 3) %>% # Only CLASS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Light_Data_Class, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Light (Class Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Light_Taxonomic_Composition(Class).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+
+
+### Order ###
+
+TP2_Light_Data_Order<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 4) %>% # Only ORDER level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Light_Data_Order, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Light (Order Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Light_Taxonomic_Composition(Order).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+### Family ###
+
+TP2_Light_Data_Family<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 5) %>% # Only FAMILY level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Light_Data_Family, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Light (Family Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Light_Taxonomic_Composition(Family).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+### Genus ###
+
+TP2_Light_Data_Genus<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP2_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 6) %>% # Only GENUS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  mutate(taxon = str_replace_all(taxon, "\xa0", " ")) %>% # Replace non-breaking spaces
+  mutate(taxon_italic = ifelse(taxlevel == 6, paste0("italic('", taxon, "')"), taxon)) %>%
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP2_Light_Data_Genus, aes(x = Sample, y = Relative_Abundance, fill = taxon_italic)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP2 Light (Genus Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon") + # Capitalized legend title
+  scale_fill_discrete(labels = parse(text = levels(factor(TP2_Light_Data_Genus$taxon_italic)))) +
+  guides(fill = guide_legend(label.theme = element_text(face = "italic")))
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP2_Light_Taxonomic_Composition(Genus).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+
+
+############################################### TP3 #########################################################
+
+
+
+
+################### TP3 Dark #################################
+
+
+
+
+### Phylum ###
+
+TP3_Dark_Data_Phylum<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 2) %>% # Only PHYLUM level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Dark_Data_Phylum, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Dark (Phylum Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Dark_Taxonomic_Composition(Phylum).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+### Class ###
+
+TP3_Dark_Data_Class<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 3) %>% # Only CLASS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Dark_Data_Class, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Dark (Class Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Dark_Taxonomic_Composition(Class).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+### Order ###
+
+TP3_Dark_Data_Order<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 4) %>% # Only ORDER level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Dark_Data_Order, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Dark (Order Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Dark_Taxonomic_Composition(Order).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+### Family ###
+
+TP3_Dark_Data_Family<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 5) %>% # Only FAMILY level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Dark_Data_Family, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Dark (Family Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Dark_Taxonomic_Composition(Family).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+### Genus ###
+
+TP3_Dark_Data_Genus<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 6) %>% # Only GENUS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  mutate(taxon = str_replace_all(taxon, "\xa0", " ")) %>% # Replace non-breaking spaces
+  mutate(taxon_italic = ifelse(taxlevel == 6, paste0("italic('", taxon, "')"), taxon)) %>%
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Dark_Data_Genus, aes(x = Sample, y = Relative_Abundance, fill = taxon_italic)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Dark (Genus Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon") + # Capitalized legend title
+  scale_fill_discrete(labels = parse(text = levels(factor(TP3_Dark_Data_Genus$taxon_italic)))) +
+  guides(fill = guide_legend(label.theme = element_text(face = "italic")))
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Dark_Taxonomic_Composition(Genus).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+
+
+################### TP3 Light #################################
+
+
+
+### Phylum ###
+
+TP3_Light_Data_Phylum<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 2) %>% # Only PHYLUM level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Light_Data_Phylum, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Light (Phylum Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Light_Taxonomic_Composition(Phylum).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+
+### Class ###
+
+TP3_Light_Data_Class<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 3) %>% # Only CLASS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Light_Data_Class, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Light (Class Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Light_Taxonomic_Composition(Class).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+### Order ###
+
+TP3_Light_Data_Order<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 4) %>% # Only ORDER level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Light_Data_Order, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Light (Order Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Light_Taxonomic_Composition(Order).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+### Family ###
+
+TP3_Light_Data_Family<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 5) %>% # Only FAMILY level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Light_Data_Family, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Light (Family Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon")
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Light_Taxonomic_Composition(Family).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+### Genus ###
+
+TP3_Light_Data_Genus<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP3_Light_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 6) %>% # Only GENUS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  mutate(taxon = str_replace_all(taxon, "\xa0", " ")) %>% # Replace non-breaking spaces
+  mutate(taxon_italic = ifelse(taxlevel == 6, paste0("italic('", taxon, "')"), taxon)) %>%
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+ggplot(TP3_Light_Data_Genus, aes(x = Sample, y = Relative_Abundance, fill = taxon_italic)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP3 Light (Genus Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon") + # Capitalized legend title
+  scale_fill_discrete(labels = parse(text = levels(factor(TP3_Light_Data_Genus$taxon_italic)))) +
+  guides(fill = guide_legend(label.theme = element_text(face = "italic")))
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP3_Light_Taxonomic_Composition(Genus).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+
+
+###########################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################### PHYLUM BASED GENUS GRAPHS #######################################
+
+# Load the dplyr and stringr packages if you haven't already
+library(dplyr)
+library(stringr)
+
+
+
+# 1. Read the mothur summary.tax output
+taxonomy_summary <- read.table("C:/Users/mhood/Desktop/Cass_Microbiome/merge.tax.summary",
+                               header = TRUE,
+                               sep = "\t",
+                               stringsAsFactors = FALSE)
+
+
+
+# 2. Sample Group Definitions
+
+TP1_Dark_Samples <- c("TP1C2", "TP1C4", "TP1C6", "TP1C8", "TP1C10", "TP1C14", "TP1D", "TP1L")
+
+
+
+# Function to get the Phylum rankID for a given rankID
+get_phylum_rank_id_for_genus <- function(rankID) {
+  parts <- str_split(rankID, "\\.")[[1]]
+  if (length(parts) >= 3) {
+    return(paste0("0.1.", parts[3]))
+  } else {
+    return(NA)
+  }
+}
+
+# Get the Phylum rankID and Phylum name for each genus
+genus_phylum <- taxonomy_summary %>%
+  filter(taxlevel == 6) %>%
+  mutate(phylum_rankID = sapply(rankID, get_phylum_rank_id_for_genus)) %>% # Corrected function call here
+  select(taxon, phylum_rankID) %>%
+  left_join(
+    taxonomy_summary %>% filter(taxlevel == 2) %>% select(phylum_rankID = rankID, phylum = taxon),
+    by = "phylum_rankID"
+  )
+
+# Your existing code for TP1 Dark Genus data
+TP1_Dark_Data_Genus<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 6) %>% # Only GENUS level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  mutate(Relative_Abundance = Abundance / sum(Abundance), .by = Sample) %>%
+  ungroup()
+
+# Join the Phylum information to the TP1 Dark Genus data
+TP1_Dark_Data_Genus_Phylum <- TP1_Dark_Data_Genus %>%
+  left_join(genus_phylum, by = "taxon")
+
+# Create the ggplot
+ggplot(TP1_Dark_Data_Genus_Phylum, aes(x = Sample, y = Relative_Abundance, fill = phylum)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition of TP1 Dark (Genus Level - Colored by Phylum)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Phylum")
+
+# To save the plot (optional)
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/TP1_Dark_Taxonomic_Composition(Genus_by_Phylum).pdf", width = 12, height = 7)
+
+
+
+
+
+###############################################################################################################################
+
+
+
+
+
+
+
+############################### GROUP SAMPLES FOR DR. CORTE (TP1 DARK: PHYLUM & FAMILY) ##########################
+
+
+# Load Packages
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+
+
+
+
+# 1. Read the mothur summary.tax output
+taxonomy_summary <- read.table("C:/Users/mhood/Desktop/Cass_Microbiome/merge.tax.summary",
+                               header = TRUE,
+                               sep = "\t",
+                               stringsAsFactors = FALSE)
+
+
+
+
+
+
+# 2. Sample Group Definitions
+
+TP1_Dark_Samples <- c("TP1C2", "TP1C4", "TP1C6", "TP1C8", "TP1C10", "TP1C14", "TP1D", "TP1L")
+
+
+
+
+# 3. Create the plots
+
+### Phylum ###
+
+TP1_Dark_Data_Phylum<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 2) %>% # Only PHYLUM level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+
+new_sample_names <- c("A", "B", "C", "D", "E", "F", "G", "H")
+
+
+ggplot(TP1_Dark_Data_Phylum, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition (Phylum Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon") +
+  scale_x_discrete(labels = new_sample_names) # Apply the new labels
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/Taxonomic_Composition(Phylum).pdf", width = 10, height = 6)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Family ###
+
+TP1_Dark_Data_Family<- taxonomy_summary %>%
+  pivot_longer(cols = all_of(TP1_Dark_Samples), names_to = "Sample", values_to = "Abundance") %>%
+  filter(taxlevel == 5) %>% # Only FAMILY level
+  filter(taxon != "Unclassified") %>% # Exclude "Unclassified"
+  filter(!str_detect(taxon, "_unclassified")) %>%  # Exclude "xxx_unclassified" taxa
+  filter(taxon != "Root") %>% # Exclude "Root" taxa
+  filter(taxon != "Bacteria") %>% # Exclude "Bacteria" taxa
+  filter(!str_detect(taxon, "Unknown")) %>% # Exclude "Unknown"
+  filter(!str_detect(taxon, "insertae_sedis")) %>% # Exclude "insertae_sedis"
+  group_by(Sample) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance)) %>%
+  ungroup()
+
+
+new_sample_names <- c("A", "B", "C", "D", "E", "F", "G", "H")
+
+
+ggplot(TP1_Dark_Data_Family, aes(x = Sample, y = Relative_Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 10),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5)) +
+  labs(title = "Taxonomic Composition (Family Level)",
+       x = "Sample",
+       y = "Relative Abundance",
+       fill = "Taxon") +
+  scale_x_discrete(labels = new_sample_names) # Apply the new labels
+
+
+ggsave("C:/Users/mhood/Desktop/Cass_Microbiome/Taxonomic_Composition(Family).pdf", width = 20, height = 6)
+
+
+
+
+
+
+
+
+
+
+############################################### INDIVIDUAL SAMPLE ###########################################
+
+
+
+
+# 1. Path to the Sample and to read the file
+taxonomy_summary_NEG_CONTROL_1 <- read.table("C:/Users/mhood/Desktop/Cass_Microbiome/NEG_CONTROL_1.R1.good.unique.nochimeras.good.filter.unique.seed_v138_2.knn.tax.summary",
+                                             header = TRUE,
+                                             sep = "\t",
+                                             stringsAsFactors = FALSE)
+
+# 2. Data manipulation for plotting
+taxonomy_long_NEG_CONTROL_1 <- taxonomy_summary_NEG_CONTROL_1 %>%
+  # Add a "Sample" column with the sample name
+  mutate(Sample = "NEG_CONTROL_1") %>%
+  filter(taxon != "Unclassified")
+
+
+# 3. Create the Histogram
+ggplot(taxonomy_long_NEG_CONTROL_1, aes(x = Sample, y = total, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Taxonomic Composition of NEG_CONTROL_1",
+       x = "Sample",
+       y = "Abundance")
+
+
+
+
+
+
+############################# OLD Group Histograms ###########################
+
+# 1. Read the mothur summary.tax output
+taxonomy_summary <- read.table("C:/Users/mhood/Desktop/Cass_Microbiome/merge.tax.summary",
+                               header = TRUE,
+                               sep = "\t",
+                               stringsAsFactors = FALSE)
+
+
+
+
+# 2. Grouping Histograms
+
+TP1_Dark_Sample_Columns <- c("TP1C2", "TP1C4", "TP1C6", "TP1C8", "TP1C10", "TP1C14", "TP1D", "TP1L")
+
+
+TP1_Dark_Taxonomy_Long <- taxonomy_summary %>%
+  pivot_longer(cols = TP1_Dark_Sample_Columns,  # Specify the sample columns
+               names_to = "Sample",
+               values_to = "Abundance") #%>%
+# filter(taxon != "Unclassified") # Remove unclassified taxa
+
+
+
+
+
+
+
+TP1_Light_Sample_Columns <- c("TP1C1", "TP1C3", "TP1C5", "TP1C7", "TP1C9", "TP1C11", "TP1C13","TP1D", "TP1L")
+
+
+TP1_Light_Taxonomy_Long <- taxonomy_summary %>%
+  pivot_longer(cols = TP1_Light_Sample_Columns,  # Specify the sample columns
+               names_to = "Sample",
+               values_to = "Abundance") %>%
+  filter(taxon != "Unclassified") # Remove unclassified taxa
+
+
+
+
+
+
+
+TP2_Dark_Sample_Columns <- c("TP2C2", "TP2C4", "TP2C6", "TP2C8", "TP2C10", "TP2C12", "TP2C14", "TP2D", "TP2L")
+
+
+TP2_Dark_Taxonomy_Long <- taxonomy_summary %>%
+  pivot_longer(cols = TP2_Dark_Sample_Columns,  # Specify the sample columns
+               names_to = "Sample",
+               values_to = "Abundance") %>%
+  filter(taxon != "Unclassified") # Remove unclassified taxa
+
+
+
+
+
+
+
+TP2_Light_Sample_Columns <- c("TP2C1", "TP2C3", "TP2C7", "TP2C9", "TP2C11", "TP2C13", "TP2D", "TP2L")
+
+
+TP2_Light_Taxonomy_Long <- taxonomy_summary %>%
+  pivot_longer(cols = TP2_Light_Sample_Columns,  # Specify the sample columns
+               names_to = "Sample",
+               values_to = "Abundance") %>%
+  filter(taxon != "Unclassified") # Remove unclassified taxa
+
+
+
+
+
+
+
+TP3_Dark_Sample_Columns <- c("TP3C2", "TP3C4", "TP3C6", "TP3C8", "TP3C10", "TP3C12", "TP3C14", "TP3D", "TP3L")
+
+
+TP3_Dark_Taxonomy_Long <- taxonomy_summary %>%
+  pivot_longer(cols = TP3_Dark_Sample_Columns,  # Specify the sample columns
+               names_to = "Sample",
+               values_to = "Abundance") %>%
+  filter(taxon != "Unclassified") # Remove unclassified taxa
+
+
+
+
+
+
+
+TP3_Light_Sample_Columns <- c("TP3C1", "TP3C3", "TP3C5", "TP3C7", "TP3C9", "TP3C11", "TP3C13", "TP3D", "TP3L")
+
+
+TP3_Light_Taxonomy_long <- taxonomy_summary %>%
+  pivot_longer(cols = TP3_Light_Sample_Columns,  # Specify the sample columns
+               names_to = "Sample",
+               values_to = "Abundance") %>%
+  filter(taxon != "Unclassified") # Remove unclassified taxa
+
+
+
+
+
+
+# 3. Create the histogram
+
+ggplot(TP1_Dark_Taxonomy_Long, aes(x = Sample, y = Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # Rotate x-axis labels
+  labs(title = "TP1 Dark Taxonomic Composition",
+       x = "Sample",
+       y = "Abundance")  # Corrected y-axis label
+
+
+
+
+
+ggplot(TP1_Light_Taxonomy_Long, aes(x = Sample, y = Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # Rotate x-axis labels
+  labs(title = "TP1 Light Taxonomic Composition",
+       x = "Sample",
+       y = "Abundance")  # Corrected y-axis label
+
+
+
+
+
+ggplot(TP2_Dark_Taxonomy_Long, aes(x = Sample, y = Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # Rotate x-axis labels
+  labs(title = "TP2 Dark Taxonomic Composition",
+       x = "Sample",
+       y = "Abundance")  # Corrected y-axis label
+
+
+
+
+
+ggplot(TP2_Light_Taxonomy_Long, aes(x = Sample, y = Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # Rotate x-axis labels
+  labs(title = "TP2 Light Taxonomic Composition",
+       x = "Sample",
+       y = "Abundance")  # Corrected y-axis label
+
+
+
+
+
+ggplot(TP3_Dark_Taxonomy_Long, aes(x = Sample, y = Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # Rotate x-axis labels
+  labs(title = "TP3 Dark Taxonomic Composition",
+       x = "Sample",
+       y = "Abundance")  # Corrected y-axis label
+
+
+
+
+
+ggplot(TP3_Light_Taxonomy_long, aes(x = Sample, y = Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # Rotate x-axis labels
+  labs(title = "TP3 Light Taxonomic Composition",
+       x = "Sample",
+       y = "Abundance")  # Corrected y-axis label
+
+
+
+
+
+####################################### Combined ####################################
+
+# 1. Read the mothur summary.tax output
+taxonomy_summary <- read.table("C:/Users/mhood/Desktop/Cass_Microbiome/merge.tax.summary",
+                               header = TRUE,
+                               sep = "\t",
+                               stringsAsFactors = FALSE)
+
+# 2. Data manipulation for plotting
+#   - Convert to long format for ggplot2
+#   - Filter out "Unclassified"
+sample_columns <- c("NEG_CONTROL_1", "NEG_CONTROL_2", "NEG_CONTROL_3","POS_CONTROL", "TP1C10", "TP1C11", "TP1C13",
+                    "TP1C14", "TP1C1", "TP1C2", "TP1C3", "TP1C4", "TP1C5", "TP1C6",
+                    "TP1C7", "TP1C8", "TP1C9", "TP1D", "TP1L", "TP2C10", "TP2C11",
+                    "TP2C12", "TP2C13", "TP2C14", "TP2C1", "TP2C2", "TP2C3", "TP2C4", "TP2C6",
+                    "TP2C7", "TP2C8", "TP2C9", "TP2D", "TP2L", "TP3C10", "TP3C11",
+                    "TP3C12", "TP3C13", "TP3C14", "TP3C1", "TP3C2", "TP3C3", "TP3C4", "TP3C5",
+                    "TP3C6", "TP3C7", "TP3C8", "TP3C9", "TP3D", "TP3L")
+
+taxonomy_long <- taxonomy_summary %>%
+  pivot_longer(cols = sample_columns,  # Specify the sample columns
+               names_to = "Sample",
+               values_to = "Abundance") %>%
+  filter(taxon != "Unclassified") # Remove unclassified taxa
+
+
+# 3. Create the histogram
+ggplot(taxonomy_long, aes(x = Sample, y = Abundance, fill = taxon)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # Rotate x-axis labels
+  labs(title = "Taxonomic Composition",
+       x = "Sample",
+       y = "Abundance")  # Corrected y-axis label
+
+# Save the plot (optional)
+ggsave("taxonomic_composition_histogram.pdf", width = 8, height = 6)
+
+
+
+
