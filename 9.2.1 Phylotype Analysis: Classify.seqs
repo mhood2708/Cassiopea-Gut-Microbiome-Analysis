@@ -1,4 +1,4 @@
-# 9.2 Phylotype Analysis: Classify.seqs
+# 9.2.1 Phylotype Analysis: Classify.seqs
 
 # The classify.seqs command allows the user to use several different methods to 
 # assign their sequences to the taxonomy outline of their choice. Current methods 
