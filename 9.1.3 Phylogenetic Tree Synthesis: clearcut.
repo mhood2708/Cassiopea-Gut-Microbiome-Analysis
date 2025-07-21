@@ -1,0 +1,57 @@
+# 9.1.3 Phylogenetic Tree Synthesis: clearcut.
+
+# The clearcut command allows mothur users to run the clearcut program from 
+# within mothur. The clearcut program written by Initiative for Bioinformatics 
+# and Evolutionary Studies (IBEST) at the University of Idaho. Clearcut is the 
+# reference implementation for the Relaxed Neighbor Joining algorithm. Whereas 
+# traditional Neighbor-Joining has a cubic time complexity with respect to the 
+# number of input sequences, Relaxed Neighbor-Joining has a drastically reduced, 
+# sub-cubic time complexity for the average case. In addition to being significantly 
+# (and asymptotically) more efficient, Relaxed Neighbor-Joining shares some nice 
+# theoretical properties with Traditional Neighbor-Joining. In particular, if 
+# distances are truly additive (self-consistent), RNJ will reconstruct the true 
+# tree that is consistent with those additive distances.
+
+# This pipeline was run using the clearcut command within the mothur module
+
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4   # number of processor cores (i.e. tasks)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --mem=4G   # memory per CPU core
+#SBATCH -J "mothur_clearcut_loop" # job name
+#SBATCH --output "mothur_clearcut_loop"
+
+#Upload modules
+module load GCC/12.3.0
+module load mothur/1.48.2
+
+# Define the directory containing FASTA files
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Distance_Output"
+
+# Define the output directory for mothur screening results
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Clearcut_Output"
+
+# Find all .fastq.gz files in the input directory and loop through them
+find "$input_dir" -type f -name "*.dist" | while IFS= read -r dist_file; do
+
+    # Sample Name Identification
+    sample_name=$(basename "$dist_file" .dist)
+
+    # Debug
+    echo "Processing sample: $sample_name"
+
+    # Mothur code for fasta files
+    mothur "#set.dir(output=$output_dir); clearcut(phylip=$dist_file)"
+
+    # Debug
+    echo "Finished processing: $sample_name"
+done
+
+# Debug
+echo "All samples processed!"
+
+
+
+
