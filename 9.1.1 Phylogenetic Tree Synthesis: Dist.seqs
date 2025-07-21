@@ -1,0 +1,39 @@
+# 9.1.1 Phylogenetic Tree Synthesis: Dist.seqs.
+
+# The "dist.seqs" command within mothur will calculate uncorrected pairwise distances 
+# between aligned DNA sequences. 
+
+# This pipeline was run using the dist.seqs command within the mothur module
+
+
+#!/bin/bash
+#SBATCH --time=24:00:00   # walltime
+#SBATCH --ntasks=4        # number of processor cores
+#SBATCH --nodes=1         # number of nodes
+#SBATCH --mem=4G          # memory per CPU core
+#SBATCH -J "dist_loop" # job name
+#SBATCH --output "dist_loop"
+
+# Load necessary modules
+module load GCC/12.3.0
+module load mothur/1.48.2
+
+# Input: Screened aligned FASTA files
+input_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Unique_Output/Final"
+
+# Output directory for distance matrices
+output_dir="/scratch/user/carlylo/Cass_Microbiome/Mothur_Distance_Output"
+
+# Loop over all .fasta files in input_dir
+find "$input_dir" -type f -name "*.fasta" | while IFS= read -r fasta_file; do
+
+    # Sample name
+    sample_name=$(basename "$fasta_file" .fasta)
+
+    # Mothur command to calculate distance matrix
+    mothur "#set.dir(output=$output_dir); dist.seqs(fasta=$fasta_file, output=lt)"
+
+    echo "Finished calculating distance matrix for $sample_name"
+done
+
+echo "All distance matrices calculated."
